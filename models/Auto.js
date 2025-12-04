@@ -77,7 +77,28 @@ const autoSchema = new mongoose.Schema({
     type: String,
     enum: ['ARS', 'USD'],
     default: 'ARS'
-  }
+  },
+  // Características Avanzadas
+  puertas: { type: Number },
+  motor: { type: String, trim: true },
+  tipoCarroceria: { type: String, trim: true },
+  llantasAleacion: { type: Boolean, default: false },
+  tapizadoCuero: { type: Boolean, default: false },
+  computadoraAbordo: { type: Boolean, default: false },
+  portaVasos: { type: Boolean, default: false },
+  direccion: { type: String, trim: true },
+  alarma: { type: Boolean, default: false },
+  controlTraccion: { type: Boolean, default: false },
+  capacidadPersonas: { type: Number },
+  potencia: { type: String, trim: true },
+  distanciaEjes: { type: String, trim: true },
+  capacidadTanque: { type: String, trim: true },
+  valvulasPorCilindro: { type: Number },
+  frenosABS: { type: Boolean, default: false },
+  airbagConductorPasajero: { type: Boolean, default: false },
+  largo: { type: String, trim: true },
+  altura: { type: String, trim: true },
+  ancho: { type: String, trim: true }
 }, {
   timestamps: true
 });
