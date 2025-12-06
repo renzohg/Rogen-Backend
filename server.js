@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 // Conexión a MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://admin:yFf0pYT4FbnpJzoM@cluster0.lajcurg.mongodb.net/rogen-autos?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('Conectado a MongoDB');
     app.listen(PORT, () => {
@@ -39,4 +39,3 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://admin:yFf0pYT4FbnpJzo
   });
 
 export default app;
-
