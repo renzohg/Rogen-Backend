@@ -27,11 +27,12 @@ app.get('/', (req, res) => {
 });
 
 // Conexión a MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log('Conectado a MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Servidor corriendo en puerto ${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log('Servidor corriendo en puerto', PORT);
     });
   })
   .catch((error) => {
