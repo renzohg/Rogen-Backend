@@ -30,8 +30,7 @@ export async function uploadToS3(fileBuffer, fileName, contentType) {
       Bucket: BUCKET_NAME,
       Key: key,
       Body: fileBuffer,
-      ContentType: contentType,
-      ACL: 'public-read' // Permite acceso público (CloudFront servirá las imágenes)
+      ContentType: contentType
     }
   });
 
