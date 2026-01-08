@@ -1,11 +1,13 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { Upload } from '@aws-sdk/lib-storage';
 
 // Configuración de S3 usando IAM Role (no requiere access keys)
 // IAM Role: arn:aws:iam::565493866589:role/EC2-RogenBackend-InstanceProfile
 // El SDK de AWS detecta automáticamente las credenciales del IAM Role asignado a la instancia EC2
+// Nota: El bucket está configurado con "Bucket owner enforced", por lo que NO se permiten ACLs
 const s3Client = new S3Client({
   region: 'us-east-1'
+  // No se requiere configuración especial para deshabilitar ACLs
+  // El SDK respeta la ausencia del parámetro ACL en PutObjectCommand
 });
 
 const BUCKET_NAME = 'rogen-autos-data';
@@ -24,17 +26,20 @@ export async function uploadToS3(fileBuffer, fileName, contentType) {
   const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
   const key = `${FOLDER_PREFIX}${timestamp}_${sanitizedFileName}`;
 
-  const upload = new Upload({
-    client: s3Client,
-    params: {
-      Bucket: BUCKET_NAME,
-      Key: key,
-      Body: fileBuffer,
-      ContentType: contentType
-    }
+  // IMPORTANTE: No incluir ACL ya que el bucket usa "Bucket owner enforced"
+  // El acceso público se controla mediante Bucket Policy, NO mediante ACLs
+  // Usamos PutObjectCommand directamente para tener control total sobre los parámetros
+  // Solo incluimos los parámetros esenciales - NO incluir ACL
+  const command = new PutObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: key,
+    Body: fileBuffer,
+    ContentType: contentType
+    // EXPLÍCITAMENTE NO incluir 'ACL' o cualquier parámetro relacionado con ACLs
+    // El bucket está configurado con "Bucket owner enforced" que deshabilita ACLs
   });
 
-  await upload.done();
+  await s3Client.send(command);
   return key; // Retorna solo el path, no la URL completa
 }
 
